@@ -6,26 +6,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    services:
-      # Start the Next.js application
-      web:
-        image: node:18
-        ports:
-          - 3000:3000
-        options: --entrypoint /bin/sh
-        # Commands to start your app
-        runs:
-          - name: Install dependencies
-            run: |
-              cd /github/workspace
-              npm install
-          - name: Start the application
-            run: |
-              npm run build
-              npm start &
-              # Wait for the server to start
-              sleep 10
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -33,13 +13,20 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: 'v22.6.0' 
+        node-version: 'v22.6.0'
 
-    - name: Install Playwright dependencies
+    - name: Install dependencies
       run: npm install
 
     - name: Install Playwright browsers
       run: npx playwright install
+
+    - name: Build and start Next.js application
+      run: |
+        npm run build
+        npm start &
+        # Wait for the server to start
+        sleep 10
 
     - name: Run Playwright tests
       run: npx playwright test --reporter=html
