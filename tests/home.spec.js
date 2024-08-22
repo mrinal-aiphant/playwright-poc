@@ -2,36 +2,42 @@ const { test, expect } = require('@playwright/test');
 const path = require('path');
 const fs = require('fs');
 
-const screenshotDir = path.join(__dirname, 'screenshots');
-if (!fs.existsSync(screenshotDir)) {
-  fs.mkdirSync(screenshotDir);
+const videoDir = path.join(__dirname, '../test-results/videos');
+if (!fs.existsSync(videoDir)) {
+  fs.mkdirSync(videoDir, { recursive: true });
 }
 
-test('should display the Next.js logo on the home page', async ({ page }) => {
+test('should display the Next.js logo on the home page', async ({ page, context }) => {
   try {
     await page.goto('http://localhost:3000');
     
     const logo = page.locator('img[alt="Next.js Logo"]');
     await expect(logo).toBeVisible();
   } catch (error) {
-    const screenshotPath = path.join(screenshotDir, 'Next-js-logo.png');
-    await page.screenshot({ path: screenshotPath });
-    console.log(`Screenshot saved at: ${screenshotPath}`);
-    throw error; // Re-throw the error after taking the screenshot
+    const videoPath = path.join(videoDir, 'Next-js-logo.mp4');
+    if (fs.existsSync(videoPath)) {
+      console.log(`Video saved at: ${videoPath}`);
+    } else {
+      console.log('No video found for this test.');
+    }
+    throw error; // Re-throw the error after attempting to retrieve the video
   }
 });
 
-test('should have a title', async ({ page }) => {
+test('should have a title', async ({ page, context }) => {
   try {
     await page.goto('http://localhost:3000');
     
     await page.waitForLoadState('domcontentloaded');
     console.log(await page.title());
-    await expect(page).toHaveTitle("Create Net App");
+    await expect(page).toHaveTitle("Create Next App");
   } catch (error) {
-    const screenshotPath = path.join(screenshotDir, 'Title.png');
-    await page.screenshot({ path: screenshotPath });
-    console.log(`Screenshot saved at: ${screenshotPath}`);
-    throw error; // Re-throw the error after taking the screenshot
+    const videoPath = path.join(videoDir, 'Title.mp4');
+    if (fs.existsSync(videoPath)) {
+      console.log(`Video saved at: ${videoPath}`);
+    } else {
+      console.log('No video found for this test.');
+    }
+    throw error; // Re-throw the error after attempting to retrieve the video
   }
 });
