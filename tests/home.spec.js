@@ -49,6 +49,8 @@ test('should have a title', async ({ page, context }) => {
 });
 
 test('should redirect to Vercel when clicking the "By Vercel" button', async ({ page, context }) => {
+  let newPage;
+
   try {
     await page.goto('http://localhost:3000');
     
@@ -56,23 +58,30 @@ test('should redirect to Vercel when clicking the "By Vercel" button', async ({ 
     const vercelButton = page.locator('a[href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"]');
     
     // Click the button and wait for the new page to open
-    const [newPage] = await Promise.all([
+    [newPage] = await Promise.all([
       context.waitForEvent('page'), // Wait for the new page to open
       vercelButton.click(), // Trigger the action
     ]);
 
-    // Wait for the new page to load and check the URL
+    // Wait for the new page to load
     await newPage.waitForLoadState('load');
-    await expect(newPage).toHaveURL('https://vercel.com/?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-ap');
+
+    // Ensure the new page URL matches the expected URL
+    await expect(newPage).toHaveURL('https://vercel.com/?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app');
   } catch (error) {
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    const videoPath = path.join(videoDir, 'Vercel-redirect.mp4');
-    if (fs.existsSync(videoPath)) {
-      console.log(`Video saved at: ${videoPath}`);
-    } else {
-      console.log('No video found for this test.');
+    // Wait for video capture to complete
+    await new Promise(resolve => setTimeout(resolve, 5000)); // Increase delay if needed
+
+    // Capture video
+    if (newPage) {
+      const videoPath = path.join(videoDir, 'Vercel-redirect.mp4');
+      if (fs.existsSync(videoPath)) {
+        console.log(`Video saved at: ${videoPath}`);
+      } else {
+        console.log('No video found for this test.');
+      }
     }
-    throw error;
+
+    throw error; // Re-throw the error after attempting to retrieve the video
   }
 });
