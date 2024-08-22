@@ -9,7 +9,7 @@ if (!fs.existsSync(videoDir)) {
 
 test('should display the Next.js logo on the home pag', async ({ page, context }) => {
   try {
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:30001');
     
     const logo = page.locator('img[alt="Next.js Logo"]');
     await expect(logo).toBeVisible();
