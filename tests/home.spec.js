@@ -7,7 +7,7 @@ if (!fs.existsSync(videoDir)) {
   fs.mkdirSync(videoDir, { recursive: true });
 }
 
-test('should display the Next.js logo on the home page', async ({ page, context }) => {
+test('should display the Next.js logo on the home pag', async ({ page, context }) => {
   try {
     await page.goto('http://localhost:3000');
     
