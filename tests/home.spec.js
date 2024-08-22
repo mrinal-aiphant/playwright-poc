@@ -7,13 +7,16 @@ if (!fs.existsSync(videoDir)) {
   fs.mkdirSync(videoDir, { recursive: true });
 }
 
-test('should display the Next.js logo on the home pag', async ({ page, context }) => {
+test('should display the Next.js logo on the home page', async ({ page, context }) => {
   try {
-    await page.goto('http://localhost:30001');
+    await page.goto('http://localhost:3000');
     
     const logo = page.locator('img[alt="Next.js Logo"]');
     await expect(logo).toBeVisible();
   } catch (error) {
+    // Wait for the video file to be written
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
     const videoPath = path.join(videoDir, 'Next-js-logo.mp4');
     if (fs.existsSync(videoPath)) {
       console.log(`Video saved at: ${videoPath}`);
@@ -32,6 +35,9 @@ test('should have a title', async ({ page, context }) => {
     console.log(await page.title());
     await expect(page).toHaveTitle("Create Next App");
   } catch (error) {
+    // Wait for the video file to be written
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
     const videoPath = path.join(videoDir, 'Title.mp4');
     if (fs.existsSync(videoPath)) {
       console.log(`Video saved at: ${videoPath}`);

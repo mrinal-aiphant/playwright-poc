@@ -3,7 +3,7 @@ const { defineConfig } = require('@playwright/test');
 
 module.exports = defineConfig({
   use: {
-    video: 'retain-on-failure', // Record video only for failed tests
+    video: 'on', // Record video for all tests
     trace: 'on'
   },
 });
