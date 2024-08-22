@@ -33,7 +33,7 @@ test('should have a title', async ({ page, context }) => {
     
     await page.waitForLoadState('domcontentloaded');
     console.log(await page.title());
-    await expect(page).toHaveTitle("Create Next App");
+    await expect(page).toHaveTitle("Create Next sApp");
   } catch (error) {
     // Wait for the video file to be written
     await new Promise(resolve => setTimeout(resolve, 2000));
